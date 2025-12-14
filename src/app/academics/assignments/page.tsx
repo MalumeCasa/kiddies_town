@@ -10,7 +10,7 @@ import { getAssignments } from "@api/assignments-actions";
 
 export const metadata: Metadata = {
   title: "All Assignments",
-  description: "View and manage all assignments",
+  description: "View and Manage All Assignments",
 };
 
 export default async function AssignmentsListPage() {
