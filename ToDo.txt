@@ -1,0 +1,7 @@
+I am doing a demo of the current project
+
+You can add a new student into the database and they will go to their assigned class
+
+Database update online
+
+Pressed enter by mistake

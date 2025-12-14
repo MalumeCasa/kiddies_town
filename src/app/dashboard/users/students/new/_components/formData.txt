@@ -1,0 +1,54 @@
+surname, name, preferredName, dateOfBirth
+idNumber, sex, homeLanguage, religion,
+numberOfChildren, positionInFamily,
+bringChildRelations, collectChildRelations,
+previousSchool, intendedPrimarySchool, 
+halfDayCare, fullDayCare, dateOfEnrolment,
+ageAtEnrolment, motherContact, fatherContact,
+
+friendNameSurname, friendRelationship, 
+friendPhysicalAddress, friendTelephoneWork,
+friendTelephoneHome, friendCellNo,
+
+kinNameSurname, kinRelationship, 
+kinPhysicalAddress, kinTelephoneWork,
+kinTelephoneHome, kinCellNo,
+
+transportName[], transportContact[],
+specialInstructions, 
+
+motherField[], fatherField[], guardianField[]
+
+-- Medical Consent Form
+medical_consent1
+medical_consent2
+
+consent1_father, consent1_mother, consent1_guardian,
+consent1_fatherSignature, consent1_motherSignature,
+consent1_guardianSignature, consent1_fatherDate, 
+consent1_motherDate, consent1_guardianDate
+
+consent2_father, consent2_mother, consent2_guardian,
+consent2_fatherSignature, consent2_motherSignature, 
+consent2_guardianSignature, consent2_fatherDate,
+consent2_motherDate, consent2_guardianDate
+
+marital_status, child_lives_with,
+
+-------Agreement Form
+popi_consent, mother_signature, mother_signature_date
+father_signature, father_signature_date,
+child_full_name, child_dob, 
+
+signatory1_full_name, signatory1_id_number, 
+signatory1_relation, signatory1_cell_number, 
+signatory1_email, signatory1_physical_address,
+signatory1_signature, signatory1_date_signed
+
+signatory2_full_name, signatory2_id_number, 
+signatory2_relation, signatory2_cell_number,
+signatory2_email, signatory2_physical_address,
+signatory2_signature, signatory2_date_signed,
+
+indemnity_agreement, signed_at, agreement_date,
+witness_name, witness_signature, 

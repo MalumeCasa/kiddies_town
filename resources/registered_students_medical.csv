@@ -1,0 +1,6 @@
+"id","id_number","family_doctor","doctor_phone","childhood_sicknesses","life_threatening_allergies","other_allergies","regular_medications","regular_medications_details","major_operations","behavior_problems","speech_hearing_problems","birth_complications","immunisation_up_to_date","family_medical_history"
+"1",,,,,,,,,,,,,,
+"2",,,,,,,,,,,,,,
+"3",,,,,,,,,,,,,,
+"4","03524625255",,,,,,,,,,,,,
+"6","03524625256","Dr Glenn","0854562121","ADHD","Cancer","No other Allergies","true","Anti-Depressants","Leg Operation","Unruly and can be Stubborn at times","Hearing Aids","No complications","true","BLINDNESS"
