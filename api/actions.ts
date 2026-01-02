@@ -65,7 +65,7 @@ export {
   getParentsByStudentId
 } from './parent-actions';
 
-/*
+
 export {
   markAttendance,
   markClassAttendance,
@@ -78,15 +78,17 @@ export {
   getStudentsByClass,
   getClasses
 } from './attendance-actions';
-*/
+
 // Export parent types
 export type { Parent, NewParent, ParentWithRelations } from './parent-actions';
 
-/*
+// Export attendance types
 export type {
   AttendanceRecord,
   NewAttendanceRecord,
-  AttendanceSummary,
-  AttendanceFilters
+  AttendanceSummaryData as AttendanceSummary,
+  AttendanceFilters,
+  AttendanceStatus,
+  StudentAttendance,
+  ClassAttendance
 } from './attendance-actions';
- */

@@ -1,4 +1,4 @@
-"use client"
+// use client"
 
 import React from 'react';
 import {
@@ -245,7 +245,8 @@ const ClassViews: React.FC<ClassViewsProps> = ({
               <div className="mb-4">
                 <p className="text-sm font-medium text-foreground mb-2">Subjects</p>
                 <div className="flex flex-wrap gap-2">
-                  {teacher.subjects.map((subject, idx) => (
+                  {/* FIX 1: Add optional chaining '?' before .map() */}
+                  {teacher.subjects?.map((subject, idx) => ( 
                     <span
                       key={idx}
                       className="px-2 py-1 bg-blue-500/10 text-blue-500 text-xs font-medium rounded-full"
@@ -318,7 +319,8 @@ const ClassViews: React.FC<ClassViewsProps> = ({
               <div className="mb-4">
                 <p className="text-sm font-medium text-foreground mb-2">Topics Covered</p>
                 <div className="flex flex-wrap gap-2">
-                  {subject.topics.map((topic, idx) => (
+                  {/* FIX 2: Add optional chaining '?' before .map() */}
+                  {subject.topics?.map((topic, idx) => ( 
                     <span
                       key={idx}
                       className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full"
@@ -332,7 +334,8 @@ const ClassViews: React.FC<ClassViewsProps> = ({
               <div className="pt-4 border-t border-border">
                 <p className="text-sm font-medium text-foreground mb-3">Assessments</p>
                 <div className="space-y-2">
-                  {subject.assessments.map((assessment, idx) => (
+                  {/* FIX 3: Add optional chaining '?' before .map() */}
+                  {subject.assessments?.map((assessment, idx) => ( 
                     <div
                       key={idx}
                       className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-muted/50 rounded-md gap-2"

@@ -3,6 +3,11 @@
 // ===== DATABASE TYPES =====
 // These match your database schema
 
+// types.ts - Complete type definitions for the application
+
+// ===== DATABASE TYPES =====
+// These match your database schema
+
 export type Student = {
   id: number | string;
   name: string;
@@ -26,8 +31,8 @@ export type Teacher = {
   qualification: string | null;
   staffId: number | null;
   classRole?: string | null;
-  // Add missing properties
-  classes?: Class[];
+  // FIX: Allow classes to be an array of strings (class names) OR Class objects
+  classes?: Class[] | string[]; 
   classIds?: number[];
 };
 
@@ -45,7 +50,7 @@ export type Subject = {
   createdAt?: string | null;
   // Add missing properties
   classId?: number | null;
-  teacherIds: number[] | null;
+  teacherIds: number[] | string[] | null ;
   teacherNames: string[] | null;
 };
 
@@ -127,11 +132,115 @@ export interface EditingClass {
   index: number;
 }
 
-// Add Chapter type for curriculum
-export interface Chapter {
-  id: string;
+// utils/curriculum-types.ts
+export interface TableCurriculum {
+  id: number;
   title: string;
-  topics: string[];
-  duration: string;
-  objectives: string[];
+  description?: string;
+  academicYear: string;
+  status: string;
+  className: string;
+  subjectName: string;
+  classId: number;
+  subjectId: number;
+  chapters: any[];
+  createdAt: string;
+}
+
+export function isTableCurriculum(cur: any): cur is TableCurriculum {
+  return (
+    cur &&
+    typeof cur.id === 'number' &&
+    typeof cur.title === 'string' &&
+    typeof cur.academicYear === 'string' &&
+    typeof cur.status === 'string' &&
+    typeof cur.className === 'string' &&
+    typeof cur.subjectName === 'string' &&
+    typeof cur.classId === 'number' &&
+    typeof cur.subjectId === 'number' &&
+    Array.isArray(cur.chapters) &&
+    typeof cur.createdAt === 'string'
+  );
+}
+
+export function transformToTableCurriculum(cur: any): TableCurriculum {
+  return {
+    id: cur.id,
+    title: cur.title,
+    description: cur.description ?? undefined,
+    academicYear: cur.academicYear,
+    status: cur.status ?? 'draft',
+    className: cur.className ?? 'Not assigned',
+    subjectName: cur.subjectName ?? 'Not assigned',
+    classId: cur.classId,
+    subjectId: cur.subjectId,
+    chapters: cur.chapters ?? [],
+    createdAt: cur.createdAt ?? new Date().toISOString(),
+  };
+}
+
+// lib/api/db/types.ts - Add these types
+export interface Curriculum {
+	id: number;
+	classId: number;
+	subjectId: number;
+	title: string;
+	description?: string;
+	academicYear: string;
+	status: 'draft' | 'published' | 'archived';
+	totalTopics?: number;
+	totalDuration?: number;
+	createdAt?: string;
+	updatedAt?: string;
+	// Relations
+	className?: string;
+	subjectName?: string;
+	chapters?: Chapter[];
+}
+
+export interface Chapter {
+	id: number;
+	curriculumId: number;
+	chapterNumber: number;
+	title: string;
+	description?: string;
+	order: number;
+	duration?: number;
+	createdAt?: string;
+	// Relations
+	topics?: Topic[];
+}
+
+export interface Topic {
+	id: number; // Change from string to number to match serial primary key
+	chapterId: number;
+	topicNumber: number;
+	title: string;
+	description?: string;
+	order: number;
+	duration?: string;
+	learningObjectives?: string[];
+	resources?: string[];
+	isCore?: boolean;
+	createdAt?: string;
+}
+
+export interface CurriculumProgress {
+	id: number;
+	curriculumId: number;
+	classId: number;
+	completedTopics: string[] | null; // Array of topic IDs as strings
+	progressPercentage: number | null;
+	lastUpdated: string | null;
+	createdAt?: string;
+}
+
+export interface StudentCurriculumProgress {
+	id: number;
+	studentId: number;
+	curriculumId: number;
+	completedTopics: string[] | null;
+	progressPercentage: number | null;
+	lastUpdated: string | null;
+	createdAt?: string;
 }

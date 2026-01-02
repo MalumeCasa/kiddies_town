@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getAttendanceRecords } from '@api/actions';
 import { AttendanceStatusBadge } from './AttendanceStatusBadge';
 
@@ -30,11 +30,7 @@ export function AttendanceRecordsTable({ classId, date }: AttendanceRecordsTable
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
 
-  useEffect(() => {
-    fetchRecords();
-  }, [classId, date]);
-
-  const fetchRecords = async () => {
+  const fetchRecords = useCallback(async () => {
     setIsLoading(true);
     try {
       const filters: any = {};
@@ -54,7 +50,11 @@ export function AttendanceRecordsTable({ classId, date }: AttendanceRecordsTable
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [classId, date]); // Add dependencies
+
+  useEffect(() => {
+    fetchRecords();
+  }, [fetchRecords]); // Now includes fetchRecords
 
   // Mock data for demonstration (with proper types)
   const mockRecords: AttendanceRecord[] = [
@@ -172,7 +172,7 @@ export function AttendanceRecordsTable({ classId, date }: AttendanceRecordsTable
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Class
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray500 uppercase tracking-wider">
                 Date
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-gray-900">Report Card Not Found</h1>
-        <p className="text-gray-600">The report card you're looking for doesn't exist.</p>
+        <p className="text-gray-600">The report card you&#39;re looking for doesn&#39;t exist.</p>
         <Link href="/report-cards">
           <Button>← Back to Report Cards</Button>
         </Link>

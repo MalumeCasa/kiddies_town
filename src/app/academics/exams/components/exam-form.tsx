@@ -6,7 +6,7 @@ import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import { Select } from "@/components/FormElements/select";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import { ShowcaseSectionDesc } from "@/components/Layouts/showcase-section";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createExam, updateExam, getExamById } from '@api/exam-actions';
 import { getAllClasses } from '@api/class-actions';
 import { getAllSubjects } from '@api/subject-actions';
@@ -157,7 +157,7 @@ export function ExamForm({ examId, onSuccess }: { examId?: number; onSuccess?: (
     } else {
       setFilteredSubjects([]);
     }
-  }, [examForm.classId, classes, subjects]);
+  }, [examForm.classId, examForm.subjectId, classes, subjects]); // Added examForm.subjectId
 
   const handleExamFormChange = (field: keyof ExamFormState, value: string | number) => {
     setExamForm(prev => ({

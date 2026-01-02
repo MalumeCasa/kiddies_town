@@ -433,7 +433,7 @@ export function CreateCurriculumForm() {
 
           {curriculum.chapters.length === 0 ? (
             <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-              <p className="text-gray-500">No chapters added yet. Click "Add Chapter" to start building your curriculum.</p>
+              <p className="text-gray-500">No chapters added yet. Click Add Chapter to start building your curriculum.</p>
             </div>
           ) : (
             <div className="space-y-6">

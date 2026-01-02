@@ -4,23 +4,40 @@ import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import type { Subject } from "@api/types";
+// Assuming you have components like Badge, Card, etc.
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Users, BookOpen, FileText } from "lucide-react";
+
 
 interface ViewSubjectFormProps {
     subject: Subject;
 }
 
 export default function ViewSubjectForm({ subject }: ViewSubjectFormProps) {
+    // Safely extract and format values, providing 'N/A' for nulls
+    const subjectName = subject.name ?? 'Subject Name';
+    const teacherName = subject.teacher ?? 'N/A';
+    const className = subject.className ?? 'N/A';
+    const classSection = subject.classSection ?? 'N/A';
+    const schedule = subject.schedule ?? 'N/A';
+    const duration = subject.duration ?? 'N/A';
+    
+    // Use optional chaining with nullish coalescing for arrays
+    const topics = subject.topics ?? [];
+    const assessments = subject.assessments ?? [];
+
     return (
         <>
             <Breadcrumb pageName="Subject Details" />
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-1">
                 <div className="flex flex-col gap-9">
-                    <ShowcaseSection title={`Subject Details - ${subject.name}`} className="space-y-5.5 !p-6.5">
+                    <ShowcaseSection title={`Subject Details - ${subjectName}`} className="space-y-5.5 !p-6.5">
                         {/* Header with Actions */}
                         <div className="flex justify-between items-center mb-6">
                             <div>
-                                <h1 className="text-3xl font-bold text-foreground">{subject.name}</h1>
-                                <p className="text-gray-600 mt-1">Taught by {subject.teacher}</p>
+                                <h1 className="text-3xl font-bold text-foreground">{subjectName}</h1>
+                                <p className="text-gray-600 mt-1">Taught by {teacherName}</p>
                             </div>
                             <div className="flex gap-2">
                                 <Link
@@ -31,106 +48,98 @@ export default function ViewSubjectForm({ subject }: ViewSubjectFormProps) {
                                 </Link>
                                 <Link
                                     href="/academics/subjects"
-                                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+                                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
                                 >
-                                    Back to Subjects
+                                    Back to List
                                 </Link>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            {/* Basic Information */}
-                            <div className="lg:col-span-2 space-y-6">
-                                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold mb-4 text-gray-800">Basic Information</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <InfoField label="Subject Name" value={subject.name} />
-                                        <InfoField label="Teacher" value={subject.teacher} />
-                                        <InfoField label="Schedule" value={subject.schedule} />
-                                        <InfoField label="Duration" value={subject.duration} />
+                        {/* Summary Stats */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                            <Card className="shadow-lg border-l-4 border-blue-500">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <BookOpen className="h-6 w-6 text-blue-500" />
+                                    <div>
+                                        <div className="text-lg font-bold">{topics.length}</div>
+                                        <div className="text-sm text-gray-600">Total Topics</div>
                                     </div>
-                                </div>
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg border-l-4 border-green-500">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <FileText className="h-6 w-6 text-green-500" />
+                                    <div>
+                                        <div className="text-lg font-bold">{assessments.length}</div>
+                                        <div className="text-sm text-gray-600">Assessments</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg border-l-4 border-purple-500">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <Users className="h-6 w-6 text-purple-500" />
+                                    <div>
+                                        <div className="text-lg font-bold">{teacherName}</div>
+                                        <div className="text-sm text-gray-600">Instructor</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            <Card className="shadow-lg border-l-4 border-yellow-500">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <Clock className="h-6 w-6 text-yellow-500" />
+                                    <div>
+                                        <div className="text-lg font-bold">{duration}</div>
+                                        <div className="text-sm text-gray-600">Duration</div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
 
-                                {/* Topics */}
-                                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold mb-4 text-gray-800">Course Topics</h3>
-                                    {subject.topics.length > 0 ? (
-                                        <div className="flex flex-wrap gap-2">
-                                            {subject.topics.map((topic, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm border border-blue-200"
-                                                >
-                                                    {topic}
-                                                </span>
-                                            ))}
-                                        </div>
+                        {/* Details Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <InfoField label="Class Name" value={className} />
+                            <InfoField label="Class Section" value={classSection} />
+                            <InfoField label="Scheduled Time" value={schedule} />
+                            <InfoField label="Duration Per Session" value={duration} />
+                        </div>
+
+                        {/* Topics Section */}
+                        <Card className="mt-8">
+                            <CardContent className="pt-6">
+                                <h3 className="text-xl font-semibold mb-4 border-b pb-2">Topics Covered</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {topics.length > 0 ? (
+                                        // Fix: topics is guaranteed to be an array here
+                                        topics.map((topic, index) => (
+                                            <Badge key={index} variant="secondary">{topic}</Badge>
+                                        ))
                                     ) : (
                                         <p className="text-gray-500">No topics defined for this subject.</p>
                                     )}
                                 </div>
-                            </div>
-
-                            {/* Assessments & Quick Info */}
-                            <div className="space-y-6">
-                                {/* Assessments */}
-                                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold mb-4 text-gray-800">Assessments</h3>
-                                    {subject.assessments.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {subject.assessments.map((assessment, index) => (
-                                                <div key={index} className="bg-gray-50 p-3 rounded border">
-                                                    <div className="font-medium text-gray-900">{assessment.type}</div>
-                                                    <div className="text-sm text-gray-600 mt-1">
-                                                        Date: {assessment.date}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                            </CardContent>
+                        </Card>
+                        
+                        {/* Assessments Section */}
+                        <Card className="mt-6">
+                            <CardContent className="pt-6">
+                                <h3 className="text-xl font-semibold mb-4 border-b pb-2">Assessments</h3>
+                                <div className="space-y-3">
+                                    {assessments.length > 0 ? (
+                                        // Fix: assessments is guaranteed to be an array here
+                                        assessments.map((assessment, index) => (
+                                            <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-md border">
+                                                <span className="font-medium">{assessment.type}</span>
+                                                <span className="text-sm text-gray-500">{assessment.date}</span>
+                                            </div>
+                                        ))
                                     ) : (
-                                        <p className="text-gray-500">No assessments scheduled.</p>
+                                        <p className="text-gray-500">No assessments scheduled for this subject.</p>
                                     )}
                                 </div>
-
-                                {/* Quick Info */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <h3 className="text-lg font-semibold mb-3 text-gray-800">Quick Info</h3>
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">Total Topics:</span>
-                                            <span className="text-sm font-medium">{subject.topics.length}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">Assessments:</span>
-                                            <span className="text-sm font-medium">{subject.assessments.length}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">Duration:</span>
-                                            <span className="text-sm font-medium">{subject.duration}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Statistics */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-6 mt-6">
-                            <h3 className="text-lg font-semibold mb-4 text-gray-800">Subject Statistics</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold text-blue-600">{subject.topics.length}</div>
-                                    <div className="text-sm text-gray-600">Course Topics</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold text-green-600">{subject.assessments.length}</div>
-                                    <div className="text-sm text-gray-600">Assessments</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold text-purple-600">{subject.teacher}</div>
-                                    <div className="text-sm text-gray-600">Instructor</div>
-                                </div>
-                            </div>
-                        </div>
+                            </CardContent>
+                        </Card>
+                        
                     </ShowcaseSection>
                 </div>
             </div>
@@ -144,6 +153,7 @@ function InfoField({ label, value }: { label: string; value: string }) {
         <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
             <div className="text-base text-gray-900 bg-gray-50 border border-gray-200 rounded-md px-3 py-2 min-h-[42px] flex items-center">
+                {/* The value is already guaranteed to be a string here due to nullish coalescing above */}
                 {value}
             </div>
         </div>

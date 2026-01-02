@@ -141,7 +141,7 @@ export function ChapterBuilder({ chapters, setChapters }: ChapterBuilderProps) {
       {chapters.length === 0 && (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
-            No chapters added yet. Click "Add Chapter" to start building your curriculum.
+            No chapters added yet. Click Add Chapter to start building your curriculum.
           </CardContent>
         </Card>
       )}
