@@ -1,3 +1,4 @@
+// ./src/app/academics/classes/data/teachersData.ts
 import { Teacher } from '@api/types';
 
 export const teachersData: Record<string, Teacher[]> = {
@@ -12,6 +13,9 @@ export const teachersData: Record<string, Teacher[]> = {
       subjects: ["Early Learning", "Play Activities", "Story Time", "Art & Craft"],
       experience: 5,
       qualification: "B.Ed Early Childhood Education",
+      staffId: 1001, // FIX: Added missing staffId
+      classIds: [1], // FIX: Added classIds placeholder
+      classes: ['Nursery 1'], // FIX: Added classes placeholder
     },
     {
       id: "T-002",
@@ -23,6 +27,9 @@ export const teachersData: Record<string, Teacher[]> = {
       subjects: ["Music", "Physical Education"],
       experience: 3,
       qualification: "Diploma in Early Education",
+      staffId: 1002, // FIX: Added missing staffId
+      classIds: [1], // FIX: Added classIds placeholder
+      classes: ['Nursery 1'], // FIX: Added classes placeholder
     },
   ],
   "Primary 3": [
@@ -33,69 +40,29 @@ export const teachersData: Record<string, Teacher[]> = {
       role: "Class Teacher",
       email: "james.w@school.com",
       phone: "+234 803 333 4444",
-      subjects: ["Mathematics", "English Language"],
-      experience: 8,
-      qualification: "M.Ed Mathematics Education",
+      subjects: ["Mathematics", "English Language", "Science"],
+      experience: 10,
+      qualification: "B.Sc Education, PGD Mathematics",
+      staffId: 1010, // FIX: Added missing staffId
+      classIds: [3], // Placeholder
+      classes: ['Primary 3'], // Placeholder
     },
     {
       id: "T-011",
-      name: "Mrs. Angela Brown",
+      name: "Mrs. Tola Adekunle",
       surname: '',
       role: "Subject Teacher",
-      email: "angela.b@school.com",
+      email: "tola.a@school.com",
       phone: "+234 804 444 5555",
-      subjects: ["Science", "Social Studies"],
-      experience: 6,
-      qualification: "B.Sc Biology, PGDE",
+      subjects: ["Social Studies", "Yoruba"],
+      experience: 8,
+      qualification: "B.A Linguistics, M.Ed",
+      staffId: 1011, // FIX: Added missing staffId
+      classIds: [3], // Placeholder
+      classes: ['Primary 3'], // Placeholder
     },
     {
       id: "T-012",
-      name: "Mr. Peter Okafor",
-      surname: '',
-      role: "Subject Teacher",
-      email: "peter.o@school.com",
-      phone: "+234 805 555 6666",
-      subjects: ["Physical Education", "Arts"],
-      experience: 4,
-      qualification: "B.Ed Physical Education",
-    },
-  ],
-  "JSS 2": [
-    {
-      id: "T-020",
-      name: "Mrs. Grace Adeyemi",
-      surname: '',
-      role: "Class Teacher",
-      email: "grace.a@school.com",
-      phone: "+234 806 666 7777",
-      subjects: ["English Language", "Literature"],
-      experience: 10,
-      qualification: "M.A English Literature",
-    },
-    {
-      id: "T-021",
-      name: "Mr. Tunde Bakare",
-      surname: '',
-      role: "Subject Teacher",
-      email: "tunde.b@school.com",
-      phone: "+234 807 777 8888",
-      subjects: ["Mathematics", "Further Mathematics"],
-      experience: 12,
-      qualification: "M.Sc Mathematics",
-    },
-    {
-      id: "T-022",
-      name: "Mrs. Chidinma Eze",
-      surname: '',
-      role: "Subject Teacher",
-      email: "chidinma.e@school.com",
-      phone: "+234 808 888 9999",
-      subjects: ["Computer Studies", "ICT"],
-      experience: 7,
-      qualification: "B.Sc Computer Science, PGDE",
-    },
-    {
-      id: "T-023",
       name: "Mr. Yusuf Ibrahim",
       surname: '',
       role: "Subject Teacher",
@@ -104,6 +71,9 @@ export const teachersData: Record<string, Teacher[]> = {
       subjects: ["Social Studies", "Civic Education"],
       experience: 9,
       qualification: "B.A History, M.Ed",
+      staffId: 1012, // FIX: Added missing staffId
+      classIds: [3], // Placeholder
+      classes: ['Primary 3'], // Placeholder
     },
   ],
   "SS 1": [
@@ -117,6 +87,9 @@ export const teachersData: Record<string, Teacher[]> = {
       subjects: ["Chemistry", "Physics"],
       experience: 15,
       qualification: "Ph.D Chemistry",
+      staffId: 1030, // FIX: Added missing staffId
+      classIds: [5], // Placeholder
+      classes: ['SS 1'], // Placeholder
     },
     {
       id: "T-031",
@@ -128,6 +101,9 @@ export const teachersData: Record<string, Teacher[]> = {
       subjects: ["Biology", "Agricultural Science"],
       experience: 11,
       qualification: "M.Sc Biology",
+      staffId: 1031, // FIX: Added missing staffId
+      classIds: [5], // Placeholder
+      classes: ['SS 1'], // Placeholder
     },
     {
       id: "T-032",
@@ -136,20 +112,12 @@ export const teachersData: Record<string, Teacher[]> = {
       role: "Subject Teacher",
       email: "fatima.h@school.com",
       phone: "+234 812 222 3333",
-      subjects: ["Economics", "Commerce"],
-      experience: 8,
-      qualification: "B.Sc Economics, M.Ed",
-    },
-    {
-      id: "T-033",
-      name: "Mr. Chidi Okonkwo",
-      surname: '',
-      role: "Subject Teacher",
-      email: "chidi.o@school.com",
-      phone: "+234 813 333 4444",
-      subjects: ["Government", "History"],
-      experience: 13,
-      qualification: "M.A Political Science",
+      subjects: ["Economics", "Accounting"],
+      experience: 12,
+      qualification: "M.A Economics",
+      staffId: 1032, // FIX: Added missing staffId
+      classIds: [5], // Placeholder
+      classes: ['SS 1'], // Placeholder
     },
   ],
 };

@@ -17,110 +17,94 @@ import { deleteCurriculum } from '@api/curriculum-actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-interface Curriculum {
+// Define your transformed data type
+interface TableCurriculum {
   id: number;
   title: string;
-  description?: string;
+  description?: string | null | undefined;
   academicYear: string;
-  status: string;
-  className?: string;
-  subjectName?: string;
+  status: string | null; 
+  className: string | null; 
+  subjectName: string | null; 
   classId: number;
   subjectId: number;
-  chapters?: any[];
-  createdAt: string;
+  chapters: any[] | null; 
+  createdAt: string | null; 
+  updatedAt: string | null;
 }
 
 interface CurriculumTableProps {
-  curriculums: Curriculum[];
+  curriculums: TableCurriculum[]; 
 }
+
+// FIX 1: Update getStatusVariant to accept string | null and provide a fallback.
+const getStatusVariant = (status: string | null): "default" | "secondary" | "outline" | "destructive" | "warning" => { 
+  // Use a fallback of 'draft' if status is null before switching
+  const s = status ?? 'draft'; 
+  switch (s) {
+    case 'published':
+      return 'default';
+    case 'draft':
+      return 'secondary';
+    case 'archived':
+      return 'outline';
+    default:
+      return 'outline';
+  }
+};
+
 
 export function CurriculumTable({ curriculums }: CurriculumTableProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'default';
-      case 'draft':
-        return 'secondary';
-      case 'archived':
-        return 'outline';
-      default:
-        return 'secondary';
-    }
-  };
-
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this curriculum?')) {
+    if (!window.confirm('Are you sure you want to delete this curriculum?')) {
       return;
     }
-
     setDeletingId(id);
     const result = await deleteCurriculum(id);
     setDeletingId(null);
-
     if (result.success) {
       router.refresh();
     } else {
-      alert(result.error);
+      alert(`Failed to delete curriculum: ${result.error}`);
     }
   };
 
-  const getTotalTopics = (chapters?: any[]) => {
-    if (!chapters) return 0;
-    return chapters.reduce((total, chapter) => total + (chapter.topics?.length || 0), 0);
-  };
 
   return (
-    <div className="border rounded-lg">
+    <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Curriculum Title</TableHead>
-            <TableHead>Class & Subject</TableHead>
-            <TableHead>Academic Year</TableHead>
-            <TableHead>Chapters/Topics</TableHead>
+            <TableHead>Title</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Academic Year</TableHead>
+            <TableHead>Class</TableHead>
+            <TableHead>Subject</TableHead>
+            <TableHead>Chapters</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {curriculums.map((curriculum) => (
             <TableRow key={curriculum.id}>
-              <TableCell className="font-medium">
-                <div>
-                  <div className="font-semibold">{curriculum.title}</div>
-                  {curriculum.description && (
-                    <div className="text-sm text-muted-foreground truncate max-w-xs">
-                      {curriculum.description}
-                    </div>
-                  )}
-                </div>
-              </TableCell>
+              <TableCell className="font-medium">{curriculum.title}</TableCell>
               <TableCell>
-                <div className="space-y-1">
-                  <div className="font-medium">{curriculum.className}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {curriculum.subjectName}
-                  </div>
-                </div>
+                {/* FIX 2: Pass status which is string | null, handled by getStatusVariant */}
+                <Badge variant={getStatusVariant(curriculum.status)}> 
+                  {/* FIX 3: Use nullish coalescing to display a fallback string */}
+                  {curriculum.status ?? 'N/A'}
+                </Badge>
               </TableCell>
               <TableCell>{curriculum.academicYear}</TableCell>
+              {/* FIX 4: Use nullish coalescing for nullable string properties */}
+              <TableCell>{curriculum.className ?? 'N/A'}</TableCell> 
+              <TableCell>{curriculum.subjectName ?? 'N/A'}</TableCell>
               <TableCell>
-                <div className="text-sm">
-                  {curriculum.chapters?.length || 0} chapters
-                  <br />
-                  <span className="text-muted-foreground">
-                    {getTotalTopics(curriculum.chapters)} topics
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant={getStatusVariant(curriculum.status)}>
-                  {curriculum.status}
-                </Badge>
+                {/* FIX 5: Use optional chaining (?.) and nullish coalescing (??) for chapters length */}
+                {curriculum.chapters?.length ?? 0} Chapters
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end space-x-2">
@@ -153,7 +137,7 @@ export function CurriculumTable({ curriculums }: CurriculumTableProps) {
           ))}
           {curriculums.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                 No curriculums found. Create your first curriculum to get started.
               </TableCell>
             </TableRow>

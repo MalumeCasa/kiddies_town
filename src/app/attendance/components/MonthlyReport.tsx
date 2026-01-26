@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getMonthlyAttendanceReport } from '@api/actions';
 
 interface MonthlyReportData {
@@ -25,7 +25,7 @@ export function MonthlyReport() {
   const [reportData, setReportData] = useState<MonthlyReportData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const months = [
+  const months = useMemo(() => [
     { value: 1, label: 'January' },
     { value: 2, label: 'February' },
     { value: 3, label: 'March' },
@@ -38,20 +38,19 @@ export function MonthlyReport() {
     { value: 10, label: 'October' },
     { value: 11, label: 'November' },
     { value: 12, label: 'December' },
-  ];
+  ], []);
 
-  const classes = [
+  const classes = useMemo(() => [
     { id: '', name: 'All Classes' },
     { id: '1', name: 'Grade 1A' },
     { id: '2', name: 'Grade 2B' },
     { id: '3', name: 'Grade 3C' },
     { id: '4', name: 'Grade 4A' },
-  ];
+  ], []);
 
-  const years = [2024, 2023, 2022];
+  const years = useMemo(() => [2024, 2023, 2022], []);
 
-  // Mock data for demonstration
-  const mockReportData: MonthlyReportData[] = [
+  const mockReportData = useMemo(() => [
     {
       id: 1,
       studentId: 1,
@@ -108,13 +107,9 @@ export function MonthlyReport() {
       totalSchoolDays: 22,
       attendancePercentage: 86.4
     },
-  ];
+  ], []);
 
-  useEffect(() => {
-    fetchReport();
-  }, [selectedMonth, selectedYear, selectedClass]);
-
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     setIsLoading(true);
     try {
       // Simulate API call
@@ -126,7 +121,8 @@ export function MonthlyReport() {
       );
       
       if (selectedClass) {
-        filteredData = filteredData.filter(item => item.className === classes.find(c => c.id === selectedClass)?.name);
+        const selectedClassName = classes.find(c => c.id === selectedClass)?.name;
+        filteredData = filteredData.filter(item => item.className === selectedClassName);
       }
       
       setReportData(filteredData);
@@ -135,7 +131,11 @@ export function MonthlyReport() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedMonth, selectedYear, selectedClass, classes, mockReportData]);
+
+  useEffect(() => {
+    fetchReport();
+  }, [fetchReport]);
 
   const getPercentageColor = (percentage: number) => {
     if (percentage >= 90) return 'text-green-600 bg-green-100';

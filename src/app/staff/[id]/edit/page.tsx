@@ -20,7 +20,7 @@ function transformNullToUndefined(obj: any): any {
 export default async function EditStaffPage({ params }: PageProps) {
     const resolvedParams = await params;
     const staffId = parseInt(resolvedParams.id);
-    const result = await getStaffById(staffId);
+    const result = await getStaffById(staffId.toString());
     
     if (!result.success) {
         return <div>Error: {result.error}</div>;

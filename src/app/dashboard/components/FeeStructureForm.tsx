@@ -27,11 +27,12 @@ interface FeeStructureFormState {
 
 interface FeeStructureFormProps {
   onSubmit: (data: FeeStructureFormState) => void;
+  onCancel?: () => void; // Add this prop
   initialData?: FeeStructureFormState;
   isSubmitting?: boolean;
 }
 
-export function FeeStructureForm({ onSubmit, initialData, isSubmitting = false }: FeeStructureFormProps) {
+export function FeeStructureForm({ onSubmit, onCancel, initialData, isSubmitting = false }: FeeStructureFormProps) {
   const [feeStructure, setFeeStructure] = useState<FeeStructureFormState>({
     name: '',
     description: '',
@@ -326,13 +327,25 @@ export function FeeStructureForm({ onSubmit, initialData, isSubmitting = false }
           </div>
         </ShowcaseSection>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-6 flex w-full justify-center rounded-lg bg-primary p-[13px] font-medium text-white hover:bg-opacity-90 disabled:bg-opacity-50"
-        >
-          {isSubmitting ? 'Saving...' : (initialData ? 'Update Fee Structure' : 'Create Fee Structure')}
-        </button>
+        {/* FORM ACTION BUTTONS */}
+        <div className="mt-6 flex gap-4">
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex w-full justify-center rounded-lg border border-gray-300 bg-white p-[13px] font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="flex w-full justify-center rounded-lg bg-primary p-[13px] font-medium text-white hover:bg-opacity-90 disabled:bg-opacity-50"
+          >
+            {isSubmitting ? 'Saving...' : (initialData ? 'Update Fee Structure' : 'Create Fee Structure')}
+          </button>
+        </div>
       </form>
     </ShowcaseSection>
   );

@@ -895,6 +895,7 @@ export const notices = pgTable("notices", {
 // ==================== USER AUTHENTICATION ====================
 export const users = pgTable("users", {
 	id: serial().primaryKey().notNull(),
+	name: text().notNull(),
 	email: text().notNull(),
 	password: text().notNull(),
 	userType: varchar("user_type", { length: 20 }).notNull(), // student, staff, parent, admin
@@ -965,6 +966,8 @@ export const dailyAttendanceView = pgView("daily_attendance_view", {
 
 import type { Chapter } from "./types";
 
+// Add these to your existing schema.ts file
+
 // ==================== CURRICULUM MANAGEMENT ====================
 export const curriculum = pgTable("curriculum", {
 	id: serial().primaryKey().notNull(),
@@ -974,7 +977,8 @@ export const curriculum = pgTable("curriculum", {
 	description: text("description"),
 	academicYear: varchar("academic_year", { length: 10 }).notNull(),
 	status: varchar("status", { length: 20 }).default('draft'),
-	chapters: jsonb("chapters").$type<Chapter[]>(),
+	totalTopics: integer("total_topics").default(0),
+	totalDuration: integer("total_duration").default(0), // in hours
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 }, (table) => [
@@ -982,17 +986,119 @@ export const curriculum = pgTable("curriculum", {
 	unique("unique_curriculum_class_subject_year").on(table.classId, table.subjectId, table.academicYear)
 ]);
 
+export const curriculumChapters = pgTable("curriculum_chapters", {
+	id: serial().primaryKey().notNull(),
+	curriculumId: integer("curriculum_id").notNull().references(() => curriculum.id, { onDelete: 'cascade' }),
+	chapterNumber: integer("chapter_number").notNull(),
+	title: varchar("title", { length: 255 }).notNull(),
+	description: text("description"),
+	order: integer("order").notNull(), // for ordering chapters
+	duration: integer("duration").default(0), // in hours
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_chapters_curriculum").on(table.curriculumId),
+	index("idx_chapters_order").on(table.curriculumId, table.order),
+	unique("unique_chapter_curriculum_order").on(table.curriculumId, table.order)
+]);
+
+export const curriculumTopics = pgTable("curriculum_topics", {
+	id: serial().primaryKey().notNull(),
+	chapterId: integer("chapter_id").notNull().references(() => curriculumChapters.id, { onDelete: 'cascade' }),
+	topicNumber: integer("topic_number").notNull(),
+	title: varchar("title", { length: 255 }).notNull(),
+	description: text("description"),
+	order: integer("order").notNull(), // for ordering within chapter
+	duration: varchar("duration", { length: 50 }), // e.g., "2 hours", "30 minutes"
+	learningObjectives: text("learning_objectives").array(), // array of objectives
+	resources: text("resources").array(), // array of resource names/links
+	isCore: boolean("is_core").default(true),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_topics_chapter").on(table.chapterId),
+	index("idx_topics_order").on(table.chapterId, table.order),
+	unique("unique_topic_chapter_order").on(table.chapterId, table.order)
+]);
+
 export const curriculumProgress = pgTable("curriculum_progress", {
 	id: serial().primaryKey().notNull(),
 	curriculumId: integer("curriculum_id").notNull().references(() => curriculum.id),
 	classId: integer("class_id").notNull().references(() => classes.id),
-	completedTopics: jsonb("completed_topics").$type<string[]>(),
+	completedTopics: jsonb("completed_topics").$type<string[]>(), // array of topic IDs
 	progressPercentage: integer("progress_percentage").default(0),
 	lastUpdated: timestamp("last_updated", { mode: 'string' }).defaultNow(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 }, (table) => [
 	index("idx_curriculum_progress_curriculum").on(table.curriculumId),
+	index("idx_curriculum_progress_class").on(table.classId),
 	unique("unique_curriculum_progress").on(table.curriculumId, table.classId)
 ]);
+
+// ==================== STUDENT CURRICULUM PROGRESS ====================
+export const studentCurriculumProgress = pgTable("student_curriculum_progress", {
+	id: serial().primaryKey().notNull(),
+	studentId: integer("student_id").notNull().references(() => students.id),
+	curriculumId: integer("curriculum_id").notNull().references(() => curriculum.id),
+	completedTopics: jsonb("completed_topics").$type<string[]>(), // array of topic IDs
+	progressPercentage: integer("progress_percentage").default(0),
+	lastUpdated: timestamp("last_updated", { mode: 'string' }).defaultNow(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_student_curriculum_progress_student").on(table.studentId),
+	index("idx_student_curriculum_progress_curriculum").on(table.curriculumId),
+	unique("unique_student_curriculum_progress").on(table.studentId, table.curriculumId)
+]);
+
+// ==================== CURRICULUM RELATIONS ====================
+export const curriculumRelations = relations(curriculum, ({ one, many }) => ({
+	class: one(classes, {
+		fields: [curriculum.classId],
+		references: [classes.id],
+	}),
+	subject: one(subjects, {
+		fields: [curriculum.subjectId],
+		references: [subjects.id],
+	}),
+	chapters: many(curriculumChapters),
+	progress: many(curriculumProgress),
+	studentProgress: many(studentCurriculumProgress),
+}));
+
+export const curriculumChaptersRelations = relations(curriculumChapters, ({ one, many }) => ({
+	curriculum: one(curriculum, {
+		fields: [curriculumChapters.curriculumId],
+		references: [curriculum.id],
+	}),
+	topics: many(curriculumTopics),
+}));
+
+export const curriculumTopicsRelations = relations(curriculumTopics, ({ one }) => ({
+	chapter: one(curriculumChapters, {
+		fields: [curriculumTopics.chapterId],
+		references: [curriculumChapters.id],
+	}),
+}));
+
+export const curriculumProgressRelations = relations(curriculumProgress, ({ one }) => ({
+	curriculum: one(curriculum, {
+		fields: [curriculumProgress.curriculumId],
+		references: [curriculum.id],
+	}),
+	class: one(classes, {
+		fields: [curriculumProgress.classId],
+		references: [classes.id],
+	}),
+}));
+
+export const studentCurriculumProgressRelations = relations(studentCurriculumProgress, ({ one }) => ({
+	student: one(students, {
+		fields: [studentCurriculumProgress.studentId],
+		references: [students.id],
+	}),
+	curriculum: one(curriculum, {
+		fields: [studentCurriculumProgress.curriculumId],
+		references: [curriculum.id],
+	}),
+}));
 
 
 // ======================== RELATIONS ===============================

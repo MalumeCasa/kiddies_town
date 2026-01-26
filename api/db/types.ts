@@ -476,3 +476,18 @@ export interface ClassActivity {
     isCompleted: boolean;
     order: number;
     };
+
+export type Curriculum = {
+  id: number;
+  title: string;
+  description?: string | null; // Change from string | undefined to string | null | undefined
+  academicYear: string;
+  status?: string | null;
+  classId: number;
+  subjectId: number;
+  className?: string | null;
+  subjectName?: string | null;
+  chapters?: Chapter[] | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}

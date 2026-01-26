@@ -111,7 +111,7 @@ export function ReportCardView({ reportCard }: ReportCardViewProps) {
       {/* Remarks */}
       <Card>
         <CardHeader>
-          <CardTitle>Teacher's Remarks</CardTitle>
+          <CardTitle>Teacher&apos;s Remarks</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">{reportCard.remarks}</p>

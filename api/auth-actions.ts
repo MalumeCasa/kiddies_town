@@ -231,6 +231,7 @@ export async function register(credentials: RegisterCredentials) {
         userType,
         referenceId,
         isActive: true,
+        name: '',
       })
       .returning();
 
@@ -438,8 +439,8 @@ export async function hasPermission(user: AuthUser, requiredPermission: string):
       .limit(1);
     
     if (staffMember?.permissions) {
-      return (staffMember.permissions as Record<string, boolean>)[requiredPermission] === true;
-    }
+        return (staffMember.permissions as Record<string, boolean>)[requiredPermission] === true;
+      }
   }
   
   return false;

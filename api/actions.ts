@@ -95,7 +95,32 @@ export {
   getStaffMemberById,
 } from './staff-actions';
 
+// Re-export attendance actions
+export {
+  markAttendance,
+  markClassAttendance,
+  getAttendanceRecords,
+  getTodaysClassAttendance,
+  getMonthlyAttendanceReport,
+  getAttendanceStats,
+  updateAttendance,
+  deleteAttendance,
+  getStudentsByClass,
+  getClasses
+} from './attendance-actions';
+
 // Export types
 export type { Staff, InsertStaff, StaffRole, EmploymentType, Department } from './db/staff-type';
 export type { Parent, NewParent, ParentWithRelations } from './parent-actions';
 export type { AuthUser, LoginCredentials, UserType } from './auth/auth';
+
+// Export attendance types
+export type {
+  AttendanceRecord,
+  NewAttendanceRecord,
+  AttendanceSummaryData as AttendanceSummary,
+  AttendanceFilters,
+  AttendanceStatus,
+  StudentAttendance,
+  ClassAttendance
+} from './attendance-actions';

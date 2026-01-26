@@ -24,7 +24,7 @@ export const NAV_DATA = [
         icon: Icons.Calendar,
         items: [
           {
-            title: "Student Directory",
+            title: "Students",
             url: "/dashboard/users/students/"
           },
           {
@@ -81,7 +81,7 @@ export const NAV_DATA = [
         icon: Icons.Alphabet,
         items: [
           {
-            title: 'Staff Directory',
+            title: 'Staff',
             url: '/staff/'
           },
           {

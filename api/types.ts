@@ -3,8 +3,6 @@
 // ===== DATABASE TYPES =====
 // These match your database schema
 
-
-
 export type Student = {
   id: number | string;
   name: string;
