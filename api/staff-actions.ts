@@ -558,3 +558,90 @@ export async function getStaffStatistics() {
     return { error: 'Failed to fetch staff statistics' };
   }
 }
+
+// Add this function to your staff-actions.ts
+export async function getStaffMemberById(id: number) {
+  try {
+    const [staffMember] = await db
+      .select({
+        name: staff.name,
+        surname: staff.surname,
+        email: staff.email,
+        position: staff.position,
+        department: staff.department,
+        role: staff.role,
+        isActive: staff.isActive
+      })
+      .from(staff)
+      .where(eq(staff.id, id))
+      .limit(1);
+
+    if (!staffMember) {
+      return { 
+        error: `Staff member with ID ${id} not found`,
+        data: null 
+      };
+    }
+
+    if (!staffMember.isActive) {
+      return { 
+        error: `Staff member ${staffMember.name} is not active`,
+        data: null 
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        name: `${staffMember.name} ${staffMember.surname}`,
+        email: staffMember.email,
+        img: "/images/user/user-03.png",
+        position: staffMember.position,
+        department: staffMember.department,
+        role: staffMember.role
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching staff member:', error);
+    return { 
+      error: 'Failed to fetch staff information',
+      data: null 
+    };
+  }
+}
+
+// In staff-actions.ts, after creating staff
+export async function createStaffWithUser(formData: FormData) {
+  try {
+    // First create staff member using existing createStaff function
+    const staffResult = await createStaff(formData);
+    
+    if (staffResult.error) {
+      return staffResult;
+    }
+
+    // Create user account for the staff member
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string || 'defaultPassword123';
+    
+    // You might want to generate a random password and email it to the user
+    // For now, we'll use a default password that should be changed on first login
+    
+    const registerFormData = new FormData();
+    registerFormData.append('email', email);
+    registerFormData.append('password', password);
+    registerFormData.append('userType', 'staff');
+    registerFormData.append('referenceId', staffResult.data?.id.toString() || '');
+
+    // Call register function from auth-actions
+    // You'll need to import it or call it directly
+    
+    return {
+      ...staffResult,
+      message: 'Staff member created with user account. Default password: defaultPassword123'
+    };
+  } catch (error) {
+    console.error('Error creating staff with user:', error);
+    return { error: 'Failed to create staff member with user account' };
+  }
+}

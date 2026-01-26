@@ -1,4 +1,14 @@
-// app/actions.ts - Main export file that re-exports all actions
+// app/actions.ts
+// Re-export all auth actions
+export {
+  login,
+  register,
+  logout,
+  getCurrentUser,
+  isAuthenticated,
+  requireAuth,
+  hasPermission,
+} from './auth-actions';
 
 // Re-export all student actions
 export { 
@@ -65,28 +75,27 @@ export {
   getParentsByStudentId
 } from './parent-actions';
 
-/*
-export {
-  markAttendance,
-  markClassAttendance,
-  getAttendanceRecords,
-  getTodaysClassAttendance,
-  getMonthlyAttendanceReport,
-  getAttendanceStats,
-  updateAttendance,
-  deleteAttendance,
-  getStudentsByClass,
-  getClasses
-} from './attendance-actions';
-*/
-// Export parent types
-export type { Parent, NewParent, ParentWithRelations } from './parent-actions';
+// Re-export staff actions
+export { 
+  getAllStaff,
+  getStaffById,
+  getStaffByRole,
+  getStaffByDepartment,
+  getActiveStaff,
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  deactivateStaff,
+  searchStaff,
+  recordStaffAttendance,
+  getStaffAttendance,
+  requestLeave,
+  updateLeaveStatus,
+  getStaffStatistics,
+  getStaffMemberById,
+} from './staff-actions';
 
-/*
-export type {
-  AttendanceRecord,
-  NewAttendanceRecord,
-  AttendanceSummary,
-  AttendanceFilters
-} from './attendance-actions';
- */
+// Export types
+export type { Staff, InsertStaff, StaffRole, EmploymentType, Department } from './db/staff-type';
+export type { Parent, NewParent, ParentWithRelations } from './parent-actions';
+export type { AuthUser, LoginCredentials, UserType } from './auth/auth';
