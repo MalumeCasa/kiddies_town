@@ -1,39 +1,32 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface SidebarContextType {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  sidebarEnabled: boolean;
+  setSidebarEnabled: (enabled: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export function SidebarProvider({ children }: { children: React.ReactNode }) {
+interface SidebarProviderProps {
+  children: ReactNode;
+  initialSidebarEnabled?: boolean;
+}
+
+export function SidebarProvider({ 
+  children, 
+  initialSidebarEnabled = true 
+}: SidebarProviderProps) {
   const [isOpen, setIsOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile] = useState(false);
+  const [sidebarEnabled, setSidebarEnabled] = useState(initialSidebarEnabled);
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 850);
-      if (window.innerWidth < 850) {
-        setIsOpen(false);
-      } else {
-        setIsOpen(true);
-      }
-    };
-
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
     <SidebarContext.Provider
@@ -42,6 +35,8 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
         setIsOpen,
         isMobile,
         toggleSidebar,
+        sidebarEnabled,
+        setSidebarEnabled,
       }}
     >
       {children}

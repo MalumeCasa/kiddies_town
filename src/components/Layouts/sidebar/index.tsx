@@ -6,8 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { NAV_DATA } from "./data";
-import { ArrowLeftIcon, ChevronUp } from "./icons";
-import { MenuItem } from "./menu-item";
+import { ArrowLeftIcon, ChevronUp, MenuIcon} from "./icons";
 import { useSidebarContext } from "./sidebar-context";
 
 declare module 'react' {
@@ -36,14 +35,20 @@ interface NavSection {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
+  const { setIsOpen, isOpen, isMobile, toggleSidebar, sidebarEnabled } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleExpanded = useCallback((title: string) => {
     setExpandedItems((prev) => 
       prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
     );
   }, []);
+
+  // Toggle sidebar collapse state
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   useEffect(() => {
     // Close sidebar on mobile when route changes
@@ -65,7 +70,7 @@ export function Sidebar() {
         }
       });
     });
-  }, [pathname, expandedItems]); // Added expandedItems to dependency array
+  }, [pathname, expandedItems]);
 
   // Close sidebar when clicking on link in mobile view
   const handleLinkClick = () => {
@@ -83,6 +88,11 @@ export function Sidebar() {
     return `/${item.title.toLowerCase().split(" ").join("-")}`;
   };
 
+  // Don't render sidebar at all if it's disabled
+  if (!sidebarEnabled) {
+    return null;
+  }
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -94,26 +104,54 @@ export function Sidebar() {
         />
       )}
 
+      {/* Collapse Toggle Button (floating) */}
+      {!isMobile && !isCollapsed && (
+        <button
+          onClick={toggleCollapse}
+          className="fixed left-[295px] top-6 z-50 p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Collapse sidebar"
+        >
+          <ArrowLeftIcon className="size-5 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
+
+      {/* Expand Button (when collapsed) */}
+      {!isMobile && isCollapsed && (
+        <button
+          onClick={toggleCollapse}
+          className="fixed left-4 top-6 z-50 p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Expand sidebar"
+        >
+          <MenuIcon className="size-5 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
+
       <aside
         className={cn(
           "flex flex-col border-r border-gray-300 bg-white transition-all duration-200 ease-linear dark:border-gray-700 dark:bg-gray-900",
           isMobile 
             ? "fixed inset-y-0 left-0 z-50 w-[290px] transform transition-transform duration-300" 
-            : "sticky top-0 h-screen w-[290px]",
-          isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"
+            : "sticky top-0 h-screen transition-width duration-300",
+          isMobile && !isOpen ? "-translate-x-full" : "translate-x-0",
+          !isMobile && isCollapsed ? "w-0 border-r-0" : "w-[290px]"
         )}
         aria-label="Main navigation"
         aria-hidden={isMobile ? !isOpen : false}
       >
-        <div className="flex h-full flex-col py-8 pl-6 pr-3">
+        <div className={cn(
+          "flex h-full flex-col py-8 pl-6 pr-3 transition-opacity duration-300",
+          isCollapsed && "opacity-0 pointer-events-none"
+        )}>
           <div className="relative flex items-center justify-between pr-4">
             <Link
               href="/"
               onClick={handleLinkClick}
-              className="px-0 py-3"
+              className="px-0 py-3 flex items-center gap-3"
             >
-              <Logo />
-              Logo goes here
+              <Logo className="h-8 w-8" />
+              <span className="font-semibold text-gray-800 dark:text-gray-200">
+                Logo
+              </span>
             </Link>
 
             {isMobile && (
@@ -123,6 +161,16 @@ export function Sidebar() {
               >
                 <span className="sr-only">Close Menu</span>
                 <ArrowLeftIcon className="size-6" />
+              </button>
+            )}
+
+            {!isMobile && (
+              <button
+                onClick={toggleCollapse}
+                className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+                aria-label="Collapse sidebar"
+              >
+                <ArrowLeftIcon className="size-5" />
               </button>
             )}
           </div>

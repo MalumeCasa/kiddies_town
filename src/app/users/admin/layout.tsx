@@ -1,5 +1,5 @@
-import "../css/satoshi.css";
-import "../css/style.css"; // This now includes flatpickr and jsvectormap
+import "../../../css/satoshi.css";
+import "../../../css/style.css"; // This now includes flatpickr and jsvectormap
 
 import { Sidebar } from "@/components/Layouts/sidebar";
 import { SidebarProvider } from "@/components/Layouts/sidebar/sidebar-context";
@@ -7,8 +7,7 @@ import { Header } from "@/components/Layouts/header";
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import type { PropsWithChildren } from "react";
-import { Providers } from "./providers";
-import { SidebarVisibilityController } from "@components/Layouts/sidebar/sidebar-visibility-controller";
+import { Providers } from "../../providers";
 
 export const metadata: Metadata = {
   title: {
@@ -25,23 +24,21 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body className="antialiased">
         <Providers>
           <SidebarProvider>
-            <SidebarVisibilityController>
-              <NextTopLoader color="#5750F1" showSpinner={false} />
+            <NextTopLoader color="#5750F1" showSpinner={false} />
 
-              <div className="flex min-h-screen">
-                <Sidebar />
+            <div className="flex min-h-screen">
+              <Sidebar />
 
-                <div className="flex-1 flex flex-col transition-all duration-300">
-                  <Header />
-                  
-                  <main className="flex-1 bg-gray-2 dark:bg-[#020d1a] overflow-auto">
-                    <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                      {children}
-                    </div>
-                  </main>
-                </div>
+              <div className="flex-1 flex flex-col">
+                <Header />
+                
+                <main className="flex-1 bg-gray-2 dark:bg-[#020d1a] overflow-auto">
+                  <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    {children}
+                  </div>
+                </main>
               </div>
-            </SidebarVisibilityController>
+            </div>
           </SidebarProvider>
         </Providers>
       </body>
