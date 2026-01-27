@@ -128,7 +128,7 @@ export function DisplayStudentsPage(studentsParam?: { students: any[] }) {
   // Handle delete student
   const handleDeleteStudent = async (studentId: string, studentName: string) => {
     if (!confirm(`Are you sure you want to delete ${studentName}? This action cannot be undone.`)) {
-      return;
+      return; 
     }
 
     setIsDeleting(studentId);
