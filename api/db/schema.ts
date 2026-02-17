@@ -148,7 +148,7 @@ export const registeredStudents = pgTable("registered_students", {
 	student_id: text(),
 	surname: text().notNull(),
 	name: text().notNull(),
-	preferredName: text(),
+	preferredName: text('preferred_name'),
 	dateOfBirth: text("date_of_birth").notNull(),
 	idNumber: text("id_number"),
 	sex: text(),
