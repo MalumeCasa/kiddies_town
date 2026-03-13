@@ -1,7 +1,0 @@
-{
-    "features": {
-        "ghcr.io/devcontainers/features/sand:1": {
-            "version": "latest"
-        }
-    }
-}
